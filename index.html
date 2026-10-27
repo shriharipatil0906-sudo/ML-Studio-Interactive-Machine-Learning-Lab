@@ -1,0 +1,2770 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ML Studio | Interactive Machine Learning Laboratory</title>
+
+<style>
+/* ================================
+   GLOBAL
+================================ */
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    scroll-behavior:smooth;
+}
+
+:root{
+    --bg:#050814;
+    --bg2:#09101e;
+    --card:#0d1728;
+    --card2:#101d31;
+    --line:rgba(130,170,255,.13);
+    --cyan:#46dcff;
+    --blue:#6384ff;
+    --purple:#a878ff;
+    --green:#43e6a0;
+    --yellow:#ffc857;
+    --red:#ff708d;
+    --text:#eef7ff;
+    --muted:#778ba8;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at 80% 5%,rgba(70,120,255,.13),transparent 28%),
+        radial-gradient(circle at 20% 50%,rgba(87,64,255,.07),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        linear-gradient(rgba(100,150,220,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(100,150,220,.035) 1px,transparent 1px);
+    background-size:45px 45px;
+    z-index:-1;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:245px;
+    height:100vh;
+    background:rgba(5,10,20,.95);
+    border-right:1px solid var(--line);
+    padding:28px 18px;
+    z-index:100;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:38px;
+}
+
+.brand-logo{
+    width:46px;
+    height:46px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--cyan),var(--blue));
+    color:#041019;
+    font-weight:900;
+    box-shadow:0 0 25px rgba(70,220,255,.22);
+}
+
+.brand h2{
+    font-size:18px;
+}
+
+.brand p{
+    color:var(--muted);
+    font-size:9px;
+    margin-top:3px;
+}
+
+.menu-title{
+    color:#3f526e;
+    font-size:8px;
+    letter-spacing:2px;
+    margin:0 10px 10px;
+}
+
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    margin-bottom:4px;
+    border-radius:9px;
+    color:#71839e;
+    font-size:11px;
+    transition:.25s;
+}
+
+.nav-link:hover,
+.nav-link.active{
+    background:linear-gradient(90deg,rgba(70,220,255,.11),transparent);
+    color:var(--cyan);
+    transform:translateX(3px);
+}
+
+.nav-num{
+    width:25px;
+    color:#40536f;
+    font-size:8px;
+}
+
+.nav-link.active .nav-num{
+    color:var(--cyan);
+}
+
+.system-box{
+    margin-top:35px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    padding:15px;
+    background:rgba(13,23,40,.6);
+}
+
+.system-title{
+    color:var(--green);
+    font-size:8px;
+    letter-spacing:1px;
+}
+
+.online-dot{
+    display:inline-block;
+    width:7px;
+    height:7px;
+    background:var(--green);
+    border-radius:50%;
+    margin-right:6px;
+    box-shadow:0 0 10px var(--green);
+}
+
+.system-box p{
+    color:#52657f;
+    font-size:8px;
+    margin:9px 0 13px;
+}
+
+.system-row{
+    display:flex;
+    justify-content:space-between;
+    font-size:8px;
+    color:#52657f;
+    margin-top:7px;
+}
+
+.system-row strong{
+    color:#9eb2ca;
+}
+
+
+/* ================================
+   MAIN
+================================ */
+
+.main{
+    margin-left:245px;
+    padding:0 5%;
+}
+
+.topbar{
+    height:70px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#536681;
+    font-size:9px;
+    letter-spacing:1px;
+}
+
+.live{
+    border:1px solid rgba(67,230,160,.15);
+    color:var(--green);
+    border-radius:30px;
+    padding:7px 11px;
+}
+
+.live span{
+    display:inline-block;
+    width:6px;
+    height:6px;
+    background:var(--green);
+    border-radius:50%;
+    margin-right:5px;
+}
+
+
+/* ================================
+   HERO
+================================ */
+
+.hero{
+    min-height:560px;
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    align-items:center;
+    gap:30px;
+}
+
+.tag{
+    color:var(--cyan);
+    font-size:9px;
+    letter-spacing:2px;
+    font-weight:bold;
+}
+
+.hero h1{
+    font-size:70px;
+    line-height:.98;
+    letter-spacing:-4px;
+    margin:17px 0;
+}
+
+.hero h1 span{
+    color:var(--cyan);
+}
+
+.hero h2{
+    font-size:20px;
+    color:#a4b5ca;
+    margin-bottom:14px;
+    font-weight:500;
+}
+
+.hero p{
+    max-width:620px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.8;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:27px;
+}
+
+.btn{
+    padding:12px 17px;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:bold;
+    transition:.25s;
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,var(--cyan),#8aa3ff);
+    color:#05101a;
+}
+
+.btn-secondary{
+    border:1px solid var(--line);
+    color:#8ca0bb;
+    background:rgba(255,255,255,.015);
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+
+/* HERO ORBIT */
+
+.ai-orbit{
+    width:390px;
+    height:390px;
+    position:relative;
+    display:grid;
+    place-items:center;
+    justify-self:center;
+}
+
+.orbit{
+    position:absolute;
+    border-radius:50%;
+    border:1px solid rgba(70,220,255,.15);
+}
+
+.orbit1{
+    width:170px;
+    height:170px;
+    border-color:rgba(70,220,255,.35);
+    animation:spin 12s linear infinite;
+}
+
+.orbit2{
+    width:260px;
+    height:260px;
+    border-style:dashed;
+    animation:spinReverse 20s linear infinite;
+}
+
+.orbit3{
+    width:350px;
+    height:350px;
+    border-color:rgba(100,130,255,.09);
+}
+
+.core{
+    width:125px;
+    height:125px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    background:radial-gradient(circle at 40% 30%,#17425d,#07121f 70%);
+    border:1px solid rgba(70,220,255,.45);
+    box-shadow:0 0 60px rgba(70,220,255,.15);
+    color:var(--cyan);
+    font-size:34px;
+    font-weight:900;
+    z-index:3;
+}
+
+.float-box{
+    position:absolute;
+    background:rgba(8,15,28,.88);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:10px 13px;
+    min-width:90px;
+    box-shadow:0 15px 35px rgba(0,0,0,.25);
+}
+
+.float-box span{
+    display:block;
+    color:#4c607c;
+    font-size:6px;
+    letter-spacing:1px;
+}
+
+.float-box strong{
+    display:block;
+    color:#b5efff;
+    margin-top:4px;
+    font-size:15px;
+}
+
+.f1{
+    top:45px;
+    right:0;
+}
+
+.f2{
+    left:0;
+    bottom:60px;
+}
+
+.f3{
+    right:-5px;
+    bottom:75px;
+}
+
+
+/* ================================
+   STATS
+================================ */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:100px;
+}
+
+.stat{
+    border:1px solid var(--line);
+    background:linear-gradient(135deg,rgba(14,24,42,.9),rgba(8,15,27,.8));
+    border-radius:13px;
+    padding:18px;
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-4px);
+    border-color:rgba(70,220,255,.35);
+}
+
+.stat span{
+    color:#52657f;
+    font-size:7px;
+    letter-spacing:1px;
+}
+
+.stat strong{
+    display:block;
+    color:var(--cyan);
+    font-size:25px;
+    margin:6px 0 3px;
+}
+
+.stat small{
+    color:#4b5e78;
+    font-size:8px;
+}
+
+
+/* ================================
+   SECTIONS
+================================ */
+
+.section{
+    margin-bottom:110px;
+    scroll-margin-top:30px;
+}
+
+.section-heading{
+    display:flex;
+    gap:15px;
+    align-items:flex-start;
+    margin-bottom:28px;
+}
+
+.section-no{
+    width:38px;
+    height:38px;
+    flex-shrink:0;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    border:1px solid rgba(70,220,255,.22);
+    color:var(--cyan);
+    background:rgba(70,220,255,.04);
+    font-size:9px;
+}
+
+.section-label{
+    color:var(--cyan);
+    font-size:7px;
+    letter-spacing:1.7px;
+}
+
+.section-heading h2{
+    font-size:29px;
+    margin:5px 0;
+}
+
+.section-heading p{
+    color:var(--muted);
+    font-size:10px;
+}
+
+
+/* ================================
+   DATASET
+================================ */
+
+.data-info{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.info-card{
+    padding:16px;
+    border:1px solid var(--line);
+    border-radius:11px;
+    background:rgba(11,19,33,.75);
+}
+
+.info-card span{
+    color:#4b5e78;
+    font-size:7px;
+}
+
+.info-card strong{
+    display:block;
+    margin:6px 0 3px;
+    font-size:11px;
+}
+
+.info-card small{
+    color:#52647d;
+    font-size:8px;
+}
+
+.table-card{
+    border:1px solid var(--line);
+    border-radius:17px;
+    overflow:hidden;
+    background:rgba(10,18,31,.78);
+}
+
+.table-header{
+    padding:20px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table-header h3{
+    font-size:17px;
+    margin-bottom:4px;
+}
+
+.table-header p{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.ready{
+    color:var(--green);
+    border:1px solid rgba(67,230,160,.14);
+    border-radius:20px;
+    padding:7px 10px;
+    font-size:7px;
+}
+
+.table-scroll{
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:rgba(4,9,17,.55);
+    color:#50637e;
+    text-align:left;
+    padding:12px 15px;
+    font-size:7px;
+    white-space:nowrap;
+}
+
+td{
+    padding:13px 15px;
+    border-top:1px solid rgba(100,140,200,.06);
+    color:#8598b1;
+    font-size:9px;
+}
+
+tr:hover td{
+    background:rgba(70,220,255,.02);
+}
+
+.grade{
+    color:var(--cyan);
+    font-weight:bold;
+}
+
+.pill{
+    padding:4px 7px;
+    border-radius:5px;
+    background:rgba(100,130,170,.08);
+}
+
+.low{
+    color:var(--red);
+}
+
+.medium{
+    color:var(--yellow);
+}
+
+.high{
+    color:var(--green);
+}
+
+
+/* ================================
+   MODEL CARDS
+================================ */
+
+.grid3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+}
+
+.model-card{
+    position:relative;
+    padding:23px;
+    border:1px solid var(--line);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(13,23,40,.92),rgba(7,14,25,.9));
+    overflow:hidden;
+    transition:.3s;
+}
+
+.model-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(70,220,255,.3);
+    box-shadow:0 20px 50px rgba(0,0,0,.22);
+}
+
+.model-tag{
+    color:var(--cyan);
+    font-size:7px;
+    letter-spacing:1.3px;
+}
+
+.model-card h3{
+    margin:10px 0 7px;
+    font-size:18px;
+}
+
+.model-card p{
+    color:#60738d;
+    font-size:9px;
+    line-height:1.7;
+}
+
+.score{
+    margin:25px 0 17px;
+    padding-bottom:18px;
+    border-bottom:1px solid rgba(100,140,200,.07);
+}
+
+.score span{
+    color:#455973;
+    font-size:7px;
+}
+
+.score strong{
+    display:block;
+    color:var(--cyan);
+    font-size:35px;
+    margin-top:4px;
+}
+
+.mini-metrics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.mini-metrics div{
+    background:rgba(4,9,17,.5);
+    border-radius:8px;
+    padding:11px;
+}
+
+.mini-metrics span{
+    color:#435670;
+    font-size:6px;
+}
+
+.mini-metrics strong{
+    display:block;
+    color:#a0b3ca;
+    margin-top:4px;
+    font-size:10px;
+}
+
+
+/* ================================
+   LOGISTIC
+================================ */
+
+.grid2{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.class-card{
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:26px;
+    background:linear-gradient(145deg,rgba(13,22,38,.9),rgba(7,14,25,.88));
+}
+
+.class-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.class-top span{
+    color:var(--cyan);
+    font-size:7px;
+    letter-spacing:1.3px;
+}
+
+.class-top h3{
+    margin-top:6px;
+    font-size:20px;
+}
+
+.class-number{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:1px solid rgba(70,220,255,.17);
+    display:grid;
+    place-items:center;
+    color:var(--cyan);
+    font-size:17px;
+}
+
+.accuracy{
+    width:145px;
+    height:145px;
+    margin:28px auto;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    position:relative;
+    background:conic-gradient(var(--cyan) calc(var(--value)*1%),rgba(70,220,255,.07) 0);
+}
+
+.accuracy:before{
+    content:"";
+    position:absolute;
+    inset:8px;
+    border-radius:50%;
+    background:#09111e;
+}
+
+.accuracy div{
+    z-index:2;
+    text-align:center;
+}
+
+.accuracy strong{
+    display:block;
+    font-size:27px;
+}
+
+.accuracy span{
+    color:#52657f;
+    font-size:6px;
+}
+
+.class-info{
+    text-align:center;
+    padding:10px;
+    border-radius:7px;
+    background:rgba(4,9,17,.45);
+    color:#60738c;
+    font-size:8px;
+}
+
+
+/* ================================
+   SCALING
+================================ */
+
+.scaling{
+    display:grid;
+    grid-template-columns:1fr 65px 1fr;
+    align-items:center;
+}
+
+.scale-card{
+    padding:25px;
+    border:1px solid var(--line);
+    border-radius:17px;
+    background:rgba(11,19,33,.78);
+}
+
+.scale-card h3{
+    margin:10px 0;
+    font-size:21px;
+}
+
+.scale-card p{
+    color:var(--muted);
+    font-size:9px;
+    line-height:1.7;
+}
+
+.formula{
+    margin-top:20px;
+    padding:15px;
+    border-radius:8px;
+    text-align:center;
+    color:var(--cyan);
+    background:rgba(4,9,17,.55);
+    border:1px solid rgba(70,220,255,.08);
+    font-family:monospace;
+}
+
+.vs{
+    width:40px;
+    height:40px;
+    justify-self:center;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--line);
+    border-radius:50%;
+    color:#60738d;
+    font-size:8px;
+}
+
+
+/* ================================
+   KNN / NB / TREE
+================================ */
+
+.algo-card{
+    padding:24px;
+    border:1px solid var(--line);
+    border-radius:17px;
+    background:linear-gradient(145deg,rgba(13,22,38,.9),rgba(7,14,25,.88));
+}
+
+.algo-icon{
+    width:43px;
+    height:43px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    color:var(--cyan);
+    border:1px solid rgba(70,220,255,.14);
+    background:rgba(70,220,255,.05);
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.algo-card h3{
+    margin:7px 0;
+    font-size:18px;
+}
+
+.algo-card > p{
+    color:var(--muted);
+    font-size:9px;
+    line-height:1.7;
+    min-height:46px;
+}
+
+.algo-score{
+    margin:22px 0;
+}
+
+.algo-score strong{
+    display:block;
+    color:var(--cyan);
+    font-size:32px;
+}
+
+.algo-score span{
+    color:#465a74;
+    font-size:6px;
+}
+
+.knn-control{
+    border-top:1px solid rgba(100,140,200,.07);
+    padding-top:17px;
+}
+
+.knn-title{
+    display:flex;
+    justify-content:space-between;
+    color:#536781;
+    font-size:8px;
+}
+
+.knn-title strong{
+    color:var(--cyan);
+}
+
+input[type=range]{
+    width:100%;
+    margin:15px 0 7px;
+    accent-color:var(--cyan);
+}
+
+#knnStatus{
+    color:#50637d;
+    font-size:7px;
+}
+
+
+/* ================================
+   SVM
+================================ */
+
+.svm-box{
+    display:grid;
+    grid-template-columns:1fr 80px 1fr;
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    background:rgba(10,18,31,.75);
+}
+
+.svm-card{
+    padding:30px;
+    text-align:center;
+}
+
+.svm-card span{
+    color:var(--cyan);
+    font-size:7px;
+    letter-spacing:1.3px;
+}
+
+.svm-card h3{
+    margin:8px 0;
+    font-size:22px;
+}
+
+.kernel{
+    display:inline-block;
+    padding:6px 9px;
+    background:rgba(4,9,17,.65);
+    color:#70839d;
+    border-radius:5px;
+    font-size:8px;
+    font-family:monospace;
+}
+
+.svm-score{
+    color:var(--cyan);
+    font-size:39px;
+    font-weight:bold;
+    margin-top:25px;
+}
+
+.svm-score small{
+    display:block;
+    color:#455972;
+    font-size:6px;
+    margin-top:3px;
+}
+
+.svm-vs{
+    display:grid;
+    place-items:center;
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+    color:var(--purple);
+    font-weight:bold;
+}
+
+
+/* ================================
+   RANDOM FOREST
+================================ */
+
+.forest{
+    display:grid;
+    grid-template-columns:.9fr 1.1fr;
+    gap:35px;
+    padding:35px;
+    border:1px solid rgba(67,230,160,.14);
+    border-radius:20px;
+    background:
+        radial-gradient(circle at 10% 20%,rgba(67,230,160,.06),transparent 35%),
+        rgba(9,18,29,.82);
+}
+
+.forest-label{
+    color:var(--green);
+    font-size:7px;
+    letter-spacing:1.5px;
+}
+
+.forest h2{
+    margin:8px 0;
+    font-size:33px;
+}
+
+.forest p{
+    color:#667e87;
+    font-size:9px;
+    line-height:1.8;
+}
+
+.forest-stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-top:23px;
+}
+
+.forest-stats div{
+    background:rgba(4,15,17,.5);
+    padding:12px;
+    border-radius:8px;
+}
+
+.forest-stats span{
+    display:block;
+    color:#45645f;
+    font-size:6px;
+}
+
+.forest-stats strong{
+    display:block;
+    color:var(--green);
+    font-size:17px;
+    margin-top:4px;
+}
+
+.importance{
+    padding:20px;
+    border-radius:13px;
+    background:rgba(4,12,18,.45);
+}
+
+.importance h3{
+    margin-bottom:20px;
+}
+
+.importance-row{
+    display:grid;
+    grid-template-columns:70px 1fr 42px;
+    gap:10px;
+    align-items:center;
+    margin:12px 0;
+}
+
+.importance-row span{
+    color:#718983;
+    font-size:8px;
+}
+
+.importance-bar{
+    height:5px;
+    background:rgba(67,230,160,.07);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.importance-bar div{
+    height:100%;
+    background:linear-gradient(90deg,#209b69,var(--green));
+    border-radius:10px;
+}
+
+.importance-row strong{
+    color:var(--green);
+    font-size:8px;
+}
+
+
+/* ================================
+   MODEL ARENA
+================================ */
+
+.arena-title{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.arena-title span{
+    color:var(--yellow);
+    font-size:7px;
+    letter-spacing:1.5px;
+}
+
+.arena-title h2{
+    font-size:40px;
+    margin:7px 0;
+}
+
+.arena-title h2 b{
+    color:var(--yellow);
+}
+
+.arena-title p{
+    color:var(--muted);
+    font-size:9px;
+}
+
+.arena{
+    display:grid;
+    grid-template-columns:1.45fr .65fr;
+    gap:14px;
+}
+
+.leaderboard{
+    padding:25px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(10,18,31,.8);
+}
+
+.leaderboard h3{
+    margin-bottom:20px;
+}
+
+.model-row{
+    display:grid;
+    grid-template-columns:170px 1fr 55px;
+    gap:13px;
+    align-items:center;
+    padding:12px 7px;
+    border-bottom:1px solid rgba(100,140,200,.05);
+}
+
+.model-name{
+    color:#8496ae;
+    font-size:9px;
+}
+
+.model-name small{
+    color:var(--yellow);
+    margin-left:5px;
+    font-size:6px;
+}
+
+.progress{
+    height:6px;
+    background:rgba(100,140,200,.07);
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress div{
+    height:100%;
+    background:linear-gradient(90deg,var(--blue),var(--cyan));
+    border-radius:20px;
+}
+
+.model-row strong{
+    color:#b1c5da;
+    font-size:9px;
+    text-align:right;
+}
+
+.winner{
+    background:linear-gradient(90deg,rgba(255,200,87,.04),transparent);
+}
+
+.winner .progress div{
+    background:linear-gradient(90deg,#d89d32,var(--yellow));
+}
+
+.winner strong{
+    color:var(--yellow);
+}
+
+.champion{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    border:1px solid rgba(255,200,87,.15);
+    border-radius:18px;
+    padding:25px;
+    background:
+        radial-gradient(circle at 50% 15%,rgba(255,200,87,.08),transparent 45%),
+        rgba(12,18,28,.84);
+}
+
+.trophy{
+    width:70px;
+    height:70px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:var(--yellow);
+    border:1px solid rgba(255,200,87,.18);
+    background:rgba(255,200,87,.06);
+    font-size:26px;
+    margin-bottom:15px;
+}
+
+.champion span{
+    color:#907b45;
+    font-size:7px;
+}
+
+.champion h2{
+    color:var(--yellow);
+    font-size:21px;
+    margin:8px 0;
+}
+
+.champion p{
+    color:#716a57;
+    font-size:8px;
+    line-height:1.6;
+}
+
+
+/* ================================
+   WORKFLOW
+================================ */
+
+.workflow{
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px;
+    margin-bottom:70px;
+    background:rgba(9,16,28,.72);
+}
+
+.workflow h2{
+    text-align:center;
+    margin-bottom:27px;
+}
+
+.flow{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.flow-step{
+    text-align:center;
+}
+
+.flow-step strong{
+    width:38px;
+    height:38px;
+    margin:0 auto 7px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    color:var(--cyan);
+    border:1px solid rgba(70,220,255,.14);
+    background:rgba(70,220,255,.04);
+    font-size:8px;
+}
+
+.flow-step span{
+    color:#657891;
+    font-size:8px;
+}
+
+.arrow{
+    color:#30465f;
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+footer{
+    border-top:1px solid var(--line);
+    padding:28px 0;
+    display:flex;
+    justify-content:space-between;
+    color:#465973;
+    font-size:8px;
+}
+
+
+/* ================================
+   ANIMATION
+================================ */
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes spinReverse{
+    to{
+        transform:rotate(-360deg);
+    }
+}
+
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media(max-width:1100px){
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .ai-orbit{
+        display:none;
+    }
+
+    .grid3{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .forest{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:800px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        padding:0 22px;
+    }
+
+    .grid3,
+    .grid2,
+    .data-info,
+    .arena{
+        grid-template-columns:1fr;
+    }
+
+    .scaling,
+    .svm-box{
+        grid-template-columns:1fr;
+    }
+
+    .vs,
+    .svm-vs{
+        margin:15px auto;
+        border:0;
+    }
+
+    .flow{
+        flex-wrap:wrap;
+        gap:20px;
+        justify-content:center;
+    }
+}
+
+@media(max-width:500px){
+
+    .hero{
+        padding:60px 0;
+        min-height:auto;
+    }
+
+    .hero h1{
+        font-size:46px;
+        letter-spacing:-2px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ===============================
+     SIDEBAR
+================================ -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">ML</div>
+
+        <div>
+            <h2>ML Studio</h2>
+            <p>INTELLIGENT LABORATORY</p>
+        </div>
+    </div>
+
+    <div class="menu-title">WORKSPACE</div>
+
+    <a href="#home" class="nav-link active">
+        <span class="nav-num">⌂</span>
+        Overview
+    </a>
+
+    <a href="#dataset" class="nav-link">
+        <span class="nav-num">01</span>
+        Dataset Lab
+    </a>
+
+    <a href="#regression" class="nav-link">
+        <span class="nav-num">02</span>
+        Regression
+    </a>
+
+    <a href="#classification" class="nav-link">
+        <span class="nav-num">03</span>
+        Classification
+    </a>
+
+    <a href="#scaling" class="nav-link">
+        <span class="nav-num">04</span>
+        Feature Scaling
+    </a>
+
+    <a href="#algorithms" class="nav-link">
+        <span class="nav-num">05</span>
+        ML Algorithms
+    </a>
+
+    <a href="#svm" class="nav-link">
+        <span class="nav-num">06</span>
+        SVM Lab
+    </a>
+
+    <a href="#forest" class="nav-link">
+        <span class="nav-num">07</span>
+        Random Forest
+    </a>
+
+    <a href="#arena" class="nav-link">
+        <span class="nav-num">08</span>
+        Model Arena
+    </a>
+
+
+    <div class="system-box">
+
+        <div class="system-title">
+            <span class="online-dot"></span>
+            SYSTEM ONLINE
+        </div>
+
+        <p>Machine learning engine ready.</p>
+
+        <div class="system-row">
+            <span>Models</span>
+            <strong>11</strong>
+        </div>
+
+        <div class="system-row">
+            <span>Dataset</span>
+            <strong>Ready</strong>
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ===============================
+     MAIN
+================================ -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div>
+        ML STUDIO / INTERACTIVE LABORATORY
+    </div>
+
+    <div class="live">
+        <span></span>
+        LIVE ANALYSIS
+    </div>
+
+</header>
+
+
+<!-- ===============================
+     HERO
+================================ -->
+
+<section class="hero" id="home">
+
+    <div>
+
+        <div class="tag">
+            MACHINE LEARNING MINI PROJECT
+        </div>
+
+        <h1>
+            Explore.<br>
+            <span>Train.</span> Compare.
+        </h1>
+
+        <h2>
+            One dataset. Every ML experiment.
+        </h2>
+
+        <p>
+            An interactive machine learning laboratory built using
+            Python, Flask and Scikit-Learn. Explore the complete
+            machine learning workflow using the UCI Student
+            Performance Dataset — from preprocessing and regression
+            to classification, SVM, Random Forest and model comparison.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#arena" class="btn btn-primary">
+                Launch Model Arena →
+            </a>
+
+            <a href="#dataset" class="btn btn-secondary">
+                Explore Dataset
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="ai-orbit">
+
+        <div class="orbit orbit1"></div>
+        <div class="orbit orbit2"></div>
+        <div class="orbit orbit3"></div>
+
+        <div class="core">
+            ML
+        </div>
+
+        <div class="float-box f1">
+            <span>MODELS</span>
+            <strong>11</strong>
+        </div>
+
+        <div class="float-box f2">
+            <span>RECORDS</span>
+            <strong>{{ rows }}</strong>
+        </div>
+
+        <div class="float-box f3">
+            <span>STATUS</span>
+            <strong>READY</strong>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     STATS
+================================ -->
+
+<section class="stats">
+
+    <div class="stat">
+        <span>DATASET RECORDS</span>
+        <strong>{{ rows }}</strong>
+        <small>Student observations</small>
+    </div>
+
+    <div class="stat">
+        <span>TOTAL ATTRIBUTES</span>
+        <strong>{{ columns }}</strong>
+        <small>Dataset columns</small>
+    </div>
+
+    <div class="stat">
+        <span>ML MODELS</span>
+        <strong>11</strong>
+        <small>Algorithms integrated</small>
+    </div>
+
+    <div class="stat">
+        <span>MISSING VALUES</span>
+        <strong>{{ missing }}</strong>
+        <small>Clean dataset</small>
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     DATASET
+================================ -->
+
+<section class="section" id="dataset">
+
+    <div class="section-heading">
+
+        <div class="section-no">01</div>
+
+        <div>
+            <div class="section-label">
+                DATA EXPLORATION
+            </div>
+
+            <h2>Dataset Laboratory</h2>
+
+            <p>
+                Understanding our data before training the models.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="data-info">
+
+        <div class="info-card">
+            <span>SOURCE</span>
+            <strong>UCI Repository</strong>
+            <small>Machine Learning Dataset</small>
+        </div>
+
+        <div class="info-card">
+            <span>DATASET</span>
+            <strong>Student Performance</strong>
+            <small>Academic records</small>
+        </div>
+
+        <div class="info-card">
+            <span>TARGET</span>
+            <strong>G3 Final Grade</strong>
+            <small>Final student grade</small>
+        </div>
+
+        <div class="info-card">
+            <span>PROBLEM TYPE</span>
+            <strong>Hybrid ML</strong>
+            <small>Regression + Classification</small>
+        </div>
+
+    </div>
+
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <div>
+                <h3>Student Dataset Preview</h3>
+                <p>
+                    First 8 preprocessed records used by our models.
+                </p>
+            </div>
+
+            <div class="ready">
+                ● DATA READY
+            </div>
+
+        </div>
+
+
+        <div class="table-scroll">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>AGE</th>
+                        <th>STUDY TIME</th>
+                        <th>FAILURES</th>
+                        <th>ABSENCES</th>
+                        <th>G1</th>
+                        <th>G2</th>
+                        <th>G3</th>
+                        <th>RESULT</th>
+                        <th>PERFORMANCE</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                {% for row in preview %}
+
+                <tr>
+
+                    <td>{{ row.age }}</td>
+                    <td>{{ row.studytime }}</td>
+                    <td>{{ row.failures }}</td>
+                    <td>{{ row.absences }}</td>
+                    <td>{{ row.G1 }}</td>
+                    <td>{{ row.G2 }}</td>
+
+                    <td class="grade">
+                        {{ row.G3 }}
+                    </td>
+
+                    <td>
+                        <span class="pill">
+                            {{ row.Pass_Fail }}
+                        </span>
+                    </td>
+
+                    <td class="{{ row.Performance|lower }}">
+                        {{ row.Performance }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     REGRESSION
+================================ -->
+
+<section class="section" id="regression">
+
+    <div class="section-heading">
+
+        <div class="section-no">02</div>
+
+        <div>
+            <div class="section-label">
+                CONTINUOUS PREDICTION
+            </div>
+
+            <h2>Regression Laboratory</h2>
+
+            <p>
+                Predicting the final G3 student grade.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="grid3">
+
+        <div class="model-card">
+
+            <div class="model-tag">
+                SIMPLE LINEAR REGRESSION
+            </div>
+
+            <h3>G2 → G3</h3>
+
+            <p>
+                Predict final grade using one independent feature.
+            </p>
+
+            <div class="score">
+                <span>R² SCORE</span>
+                <strong>{{ simple.r2 }}</strong>
+            </div>
+
+            <div class="mini-metrics">
+
+                <div>
+                    <span>MSE</span>
+                    <strong>{{ simple.mse }}</strong>
+                </div>
+
+                <div>
+                    <span>MAE</span>
+                    <strong>{{ simple.mae }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="model-card">
+
+            <div class="model-tag">
+                MULTIPLE LINEAR REGRESSION
+            </div>
+
+            <h3>G1 + G2 → G3</h3>
+
+            <p>
+                Predict final grade using two academic features.
+            </p>
+
+            <div class="score">
+                <span>R² SCORE</span>
+                <strong>{{ multiple.r2 }}</strong>
+            </div>
+
+            <div class="mini-metrics">
+
+                <div>
+                    <span>MSE</span>
+                    <strong>{{ multiple.mse }}</strong>
+                </div>
+
+                <div>
+                    <span>MAE</span>
+                    <strong>{{ multiple.mae }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="model-card">
+
+            <div class="model-tag">
+                MULTIPLE REGRESSION 3+
+            </div>
+
+            <h3>5 Features → G3</h3>
+
+            <p>
+                G1, G2, study time, failures and absences.
+            </p>
+
+            <div class="score">
+                <span>R² SCORE</span>
+                <strong>{{ multiple_more.r2 }}</strong>
+            </div>
+
+            <div class="mini-metrics">
+
+                <div>
+                    <span>MSE</span>
+                    <strong>{{ multiple_more.mse }}</strong>
+                </div>
+
+                <div>
+                    <span>MAE</span>
+                    <strong>{{ multiple_more.mae }}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     LOGISTIC REGRESSION
+================================ -->
+
+<section class="section" id="classification">
+
+    <div class="section-heading">
+
+        <div class="section-no">03</div>
+
+        <div>
+            <div class="section-label">
+                LOGISTIC REGRESSION
+            </div>
+
+            <h2>Classification Laboratory</h2>
+
+            <p>
+                Binary and multiclass student classification.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="grid2">
+
+        <div class="class-card">
+
+            <div class="class-top">
+
+                <div>
+                    <span>BINARY CLASSIFICATION</span>
+                    <h3>Pass or Fail?</h3>
+                </div>
+
+                <div class="class-number">
+                    2
+                </div>
+
+            </div>
+
+
+            <div class="accuracy"
+                 style="--value:{{ binary.accuracy }}">
+
+                <div>
+                    <strong>
+                        {{ binary.accuracy }}%
+                    </strong>
+
+                    <span>ACCURACY</span>
+                </div>
+
+            </div>
+
+
+            <div class="class-info">
+                G3 ≥ 10 → PASS &nbsp;&nbsp; • &nbsp;&nbsp;
+                G3 &lt; 10 → FAIL
+            </div>
+
+        </div>
+
+
+        <div class="class-card">
+
+            <div class="class-top">
+
+                <div>
+                    <span>MULTICLASS CLASSIFICATION</span>
+                    <h3>Performance Level</h3>
+                </div>
+
+                <div class="class-number">
+                    3
+                </div>
+
+            </div>
+
+
+            <div class="accuracy"
+                 style="--value:{{ multiclass.accuracy }}">
+
+                <div>
+                    <strong>
+                        {{ multiclass.accuracy }}%
+                    </strong>
+
+                    <span>ACCURACY</span>
+                </div>
+
+            </div>
+
+
+            <div class="class-info">
+                LOW &nbsp; • &nbsp;
+                MEDIUM &nbsp; • &nbsp;
+                HIGH
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     SCALING
+================================ -->
+
+<section class="section" id="scaling">
+
+    <div class="section-heading">
+
+        <div class="section-no">04</div>
+
+        <div>
+            <div class="section-label">
+                DATA PREPROCESSING
+            </div>
+
+            <h2>Feature Scaling Lab</h2>
+
+            <p>
+                Standardization and normalization techniques.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="scaling">
+
+        <div class="scale-card">
+
+            <div class="model-tag">
+                STANDARDIZATION
+            </div>
+
+            <h3>StandardScaler</h3>
+
+            <p>
+                Converts features so they have approximately
+                zero mean and unit standard deviation.
+            </p>
+
+            <div class="formula">
+                z = (x - μ) / σ
+            </div>
+
+        </div>
+
+
+        <div class="vs">
+            VS
+        </div>
+
+
+        <div class="scale-card">
+
+            <div class="model-tag">
+                NORMALIZATION
+            </div>
+
+            <h3>MinMaxScaler</h3>
+
+            <p>
+                Rescales feature values into a fixed
+                numerical range, commonly 0 to 1.
+            </p>
+
+            <div class="formula">
+                x' = (x - min) / (max - min)
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     ALGORITHMS
+================================ -->
+
+<section class="section" id="algorithms">
+
+    <div class="section-heading">
+
+        <div class="section-no">05</div>
+
+        <div>
+            <div class="section-label">
+                CLASSIFICATION ALGORITHMS
+            </div>
+
+            <h2>Classifier Laboratory</h2>
+
+            <p>
+                Compare distance, probability and tree-based learning.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="grid3">
+
+
+        <!-- KNN -->
+
+        <div class="algo-card">
+
+            <div class="algo-icon">
+                K
+            </div>
+
+            <div class="model-tag">
+                DISTANCE BASED
+            </div>
+
+            <h3>K-Nearest Neighbors</h3>
+
+            <p>
+                Predicts performance based on the nearest
+                student records in feature space.
+            </p>
+
+
+            <div class="algo-score">
+
+                <strong id="knnAccuracy">
+                    {{ knn.accuracy }}%
+                </strong>
+
+                <span>TEST ACCURACY</span>
+
+            </div>
+
+
+            <div class="knn-control">
+
+                <div class="knn-title">
+
+                    <span>INTERACTIVE KNN</span>
+
+                    <strong>
+                        K = <b id="kValue">5</b>
+                    </strong>
+
+                </div>
+
+
+                <input
+                    id="kSlider"
+                    type="range"
+                    min="1"
+                    max="15"
+                    step="2"
+                    value="5"
+                >
+
+
+                <div id="knnStatus">
+                    Change K to retrain the model
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAIVE BAYES -->
+
+        <div class="algo-card">
+
+            <div class="algo-icon">
+                P
+            </div>
+
+            <div class="model-tag">
+                PROBABILISTIC
+            </div>
+
+            <h3>Naive Bayes</h3>
+
+            <p>
+                Uses Bayes' theorem to estimate the
+                probability of each performance class.
+            </p>
+
+            <div class="algo-score">
+
+                <strong>
+                    {{ bayes.accuracy }}%
+                </strong>
+
+                <span>TEST ACCURACY</span>
+
+            </div>
+
+            <div class="formula">
+                P(A|B) ∝ P(B|A) × P(A)
+            </div>
+
+        </div>
+
+
+        <!-- TREE -->
+
+        <div class="algo-card">
+
+            <div class="algo-icon">
+                Y
+            </div>
+
+            <div class="model-tag">
+                TREE BASED
+            </div>
+
+            <h3>Decision Tree</h3>
+
+            <p>
+                Learns feature-based decision rules and
+                creates branches for classification.
+            </p>
+
+            <div class="algo-score">
+
+                <strong>
+                    {{ tree.accuracy }}%
+                </strong>
+
+                <span>TEST ACCURACY</span>
+
+            </div>
+
+            <div class="formula">
+                Root → Decision → Branch → Class
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     SVM
+================================ -->
+
+<section class="section" id="svm">
+
+    <div class="section-heading">
+
+        <div class="section-no">06</div>
+
+        <div>
+            <div class="section-label">
+                SUPPORT VECTOR MACHINE
+            </div>
+
+            <h2>SVM Kernel Battle</h2>
+
+            <p>
+                Comparing linear and nonlinear decision boundaries.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="svm-box">
+
+        <div class="svm-card">
+
+            <span>LINEAR KERNEL</span>
+
+            <h3>Linear SVM</h3>
+
+            <div class="kernel">
+                kernel = "linear"
+            </div>
+
+            <div class="svm-score">
+
+                {{ linear.accuracy }}%
+
+                <small>
+                    TEST ACCURACY
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="svm-vs">
+            VS
+        </div>
+
+
+        <div class="svm-card">
+
+            <span>RBF KERNEL</span>
+
+            <h3>Non-Linear SVM</h3>
+
+            <div class="kernel">
+                kernel = "rbf"
+            </div>
+
+            <div class="svm-score">
+
+                {{ nonlinear.accuracy }}%
+
+                <small>
+                    TEST ACCURACY
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     RANDOM FOREST
+================================ -->
+
+<section class="section" id="forest">
+
+    <div class="forest">
+
+        <div>
+
+            <div class="forest-label">
+                07 / ENSEMBLE LEARNING
+            </div>
+
+            <h2>Random Forest</h2>
+
+            <p>
+                Random Forest combines multiple decision trees
+                and uses majority voting to provide a stable
+                classification result.
+            </p>
+
+
+            <div class="forest-stats">
+
+                <div>
+                    <span>TREES</span>
+                    <strong>100</strong>
+                </div>
+
+                <div>
+                    <span>FEATURES</span>
+                    <strong>8</strong>
+                </div>
+
+                <div>
+                    <span>ACCURACY</span>
+                    <strong>{{ forest.accuracy }}%</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="importance">
+
+            <div class="forest-label">
+                MODEL INSIGHT
+            </div>
+
+            <h3>Feature Importance</h3>
+
+
+            {% for item in importance %}
+
+            <div class="importance-row">
+
+                <span>
+                    {{ item.feature }}
+                </span>
+
+                <div class="importance-bar">
+
+                    <div style="width:{{ item.value }}%"></div>
+
+                </div>
+
+                <strong>
+                    {{ item.value }}%
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     MODEL ARENA
+================================ -->
+
+<section class="section" id="arena">
+
+    <div class="arena-title">
+
+        <span>
+            08 / FINAL EXPERIMENT
+        </span>
+
+        <h2>
+            Model <b>Arena</b>
+        </h2>
+
+        <p>
+            Every classification model competes using
+            the same student dataset.
+        </p>
+
+    </div>
+
+
+    <div class="arena">
+
+        <div class="leaderboard">
+
+            <div class="model-tag">
+                PERFORMANCE RANKING
+            </div>
+
+            <h3>Classifier Leaderboard</h3>
+
+
+            {% for model, accuracy in arena.items() %}
+
+            <div class="model-row
+                {% if model == best_model %}
+                winner
+                {% endif %}
+            ">
+
+                <div class="model-name">
+
+                    {{ model }}
+
+                    {% if model == best_model %}
+
+                    <small>
+                        ★ BEST
+                    </small>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        style="width:{{ accuracy }}%"
+                    ></div>
+
+                </div>
+
+
+                <strong>
+                    {{ accuracy }}%
+                </strong>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="champion">
+
+            <div class="trophy">
+                ★
+            </div>
+
+            <span>
+                CHAMPION MODEL
+            </span>
+
+            <h2>
+                {{ best_model }}
+            </h2>
+
+            <p>
+                Highest classification accuracy
+                achieved in the current experiment.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===============================
+     WORKFLOW
+================================ -->
+
+<section class="workflow">
+
+    <h2>
+        Complete Machine Learning Workflow
+    </h2>
+
+
+    <div class="flow">
+
+        <div class="flow-step">
+            <strong>01</strong>
+            <span>Dataset</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>02</strong>
+            <span>EDA</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>03</strong>
+            <span>Preprocess</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>04</strong>
+            <span>Split Data</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>05</strong>
+            <span>Train</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>06</strong>
+            <span>Predict</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>07</strong>
+            <span>Evaluate</span>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="flow-step">
+            <strong>08</strong>
+            <span>Compare</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div>
+        <strong>ML STUDIO</strong>
+        &nbsp; • &nbsp;
+        Interactive Machine Learning Laboratory
+    </div>
+
+    <div>
+        UCI Student Performance Dataset
+    </div>
+
+</footer>
+
+</main>
+
+
+<!-- ===============================
+     JAVASCRIPT INSIDE SAME HTML
+================================ -->
+
+<script>
+
+/* KNN SLIDER */
+
+const slider =
+    document.getElementById("kSlider");
+
+const kValue =
+    document.getElementById("kValue");
+
+const knnAccuracy =
+    document.getElementById("knnAccuracy");
+
+const knnStatus =
+    document.getElementById("knnStatus");
+
+
+if(slider){
+
+    slider.addEventListener(
+        "input",
+        function(){
+
+            kValue.textContent =
+                this.value;
+
+        }
+    );
+
+
+    slider.addEventListener(
+        "change",
+        async function(){
+
+            const k =
+                parseInt(this.value);
+
+
+            knnStatus.textContent =
+                "Training model...";
+
+
+            knnAccuracy.style.opacity =
+                "0.4";
+
+
+            try{
+
+                const response =
+                    await fetch(
+                        "/knn",
+                        {
+                            method:"POST",
+
+                            headers:{
+                                "Content-Type":
+                                "application/json"
+                            },
+
+                            body:
+                            JSON.stringify({
+                                k:k
+                            })
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if(!response.ok){
+
+                    throw new Error(
+                        data.error ||
+                        "Training failed"
+                    );
+
+                }
+
+
+                knnAccuracy.textContent =
+                    data.accuracy + "%";
+
+
+                knnAccuracy.style.opacity =
+                    "1";
+
+
+                knnStatus.textContent =
+                    "✓ Model retrained successfully";
+
+
+                setTimeout(
+                    function(){
+
+                        knnStatus.textContent =
+                            "Change K to retrain the model";
+
+                    },
+                    2000
+                );
+
+            }
+
+            catch(error){
+
+                console.error(error);
+
+                knnAccuracy.style.opacity =
+                    "1";
+
+                knnStatus.textContent =
+                    "Unable to retrain model";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ACTIVE SIDEBAR */
+
+const navLinks =
+    document.querySelectorAll(
+        ".nav-link"
+    );
+
+const sections =
+    document.querySelectorAll(
+        "section[id]"
+    );
+
+
+window.addEventListener(
+    "scroll",
+    function(){
+
+        let current =
+            "home";
+
+
+        sections.forEach(
+            function(section){
+
+                if(
+                    window.scrollY >=
+                    section.offsetTop - 180
+                ){
+
+                    current =
+                        section.id;
+
+                }
+
+            }
+        );
+
+
+        navLinks.forEach(
+            function(link){
+
+                link.classList.remove(
+                    "active"
+                );
+
+
+                if(
+                    link.getAttribute(
+                        "href"
+                    )
+                    ===
+                    "#" + current
+                ){
+
+                    link.classList.add(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
+```
